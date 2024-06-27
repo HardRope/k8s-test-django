@@ -42,29 +42,26 @@ docker-compose up db
 
 Следуя данному [видео](https://www.youtube.com/watch?v=q_nj340pkQo&list=PLg5SS_4L6LYvN1RqaVesof8KAf-02fJSi&index=1) запустите кластер.
 
-Далее создайте файл с конфигурацей в формате .yaml для запуска сайта:
+Далее создайте кофигурационный файл `Secrets.yaml` для запуска сайта:
 
 ```yaml
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
-  name: django-config
-  labels:
-    app.kubernetes.io/name: django
-    app.kubernetes.io/instance: django-config
-    app.kubernetes.io/version: "1.0"
-data:
-  ALLOWED_HOSTS: star-burger.test
-  SECRET_KEY: Описание переменной находится ниже
-  DATABASE_URL: postgres://test_k8s:OwOtBep9Frut@айпи и порт на которых запущена база данных/test_k8s
-  DEBUG: Описание переменной находится ниже, важно, чтобы переменная находилась в одинарных ковычках, вроде: 'False'
+  name: django-secret
+type: Opaque
+stringData:
+  ALLOWED_HOSTS: "your hosts"
+  DATABASE_URL: "postgres://..."
+  DEBUG: "True\False"
+  SECRET_KEY: "some_secret_key"
 ```
 
 Команды для запуска кластера:
 
 ```shell-session
 minikube addons enable ingress
-kubectl apply -f путь к только что созданному конфигурационному файлу.
+kubectl apply -f путь к созданному конфигурационному файлу `Secrets`
 kubectl apply -f ./kubernetes/deployments/django-deployment.yaml
 kubectl apply -f ./kubernetes/services/django-service.yaml
 ```
