@@ -4,4 +4,4 @@ __pycache__/
 *$py.class
 Pipfile
 .env
-app_config.yaml
+Secrets.yaml
